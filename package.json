@@ -1,0 +1,17 @@
+{
+  "name": "emfr",
+  "version": "1.0.0",
+  "description": "EMF de RPA",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Emanuel de Souza Scherer",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^13.9.5",
+    "nan": "^2.14.0",
+    "python-bridge": "^1.1.0",
+    "robotjs": "^0.6.0"
+  }
+}
