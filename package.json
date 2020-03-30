@@ -1,10 +1,10 @@
 {
   "name": "emfr",
   "version": "1.0.0",
-  "description": "EMF de RPA",
-  "main": "index.js",
+  "description": "Emanuel Master Functions RPA",
+  "main": "lib/EMFR.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\""
   },
   "author": "Emanuel de Souza Scherer",
   "license": "ISC",
