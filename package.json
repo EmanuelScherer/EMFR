@@ -10,8 +10,15 @@
   "license": "ISC",
   "dependencies": {
     "@types/node": "^13.9.5",
+    "fs": "0.0.1-security",
+    "jimp": "^0.9.8",
     "nan": "^2.14.0",
     "python-bridge": "^1.1.0",
     "robotjs": "^0.6.0"
+  },
+  "devDependencies": {
+    "better-docs": "^1.4.7",
+    "jsdoc": "^3.6.3",
+    "typescript": "^3.8.3"
   }
 }
