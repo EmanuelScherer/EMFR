@@ -2,7 +2,7 @@
   "name": "emfr",
   "version": "1.0.0",
   "description": "Emanuel Master Functions RPA",
-  "main": "",
+  "main": "EMFR.js",
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: no test specified\""
