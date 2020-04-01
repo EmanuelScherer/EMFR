@@ -4,13 +4,13 @@ import cv2
 import numpy as np 
 
 # Read the main image 
-img_rgb = cv2.imread('/home/mano/Documentos/Codigos/EMFR/Test/ScreenInput3.png', cv2.IMREAD_COLOR)
+img_rgb = cv2.imread('./Test/ScreenInput.png', cv2.IMREAD_COLOR)
 
 # Convert it to grayscale 
 # img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_GRAY2BGR) 
   
 # Read the template 
-template = cv2.imread('/home/mano/Documentos/Codigos/EMFR/Test/QuadradoClickTeste.png', cv2.IMREAD_COLOR) 
+template = cv2.imread('./Test/QuadradoClickTeste.png', cv2.IMREAD_COLOR) 
 
 # template_gray = cv2.cvtColor(template, cv2.COLOR_GRAY2BGR)
 
@@ -33,6 +33,6 @@ for pt in zip(*loc[::-1]):
 # Show the final image with the matched area. 
 #cv2.imshow('Detected',img_rgb) 
 
-cv2.imwrite('/home/mano/Documentos/Codigos/EMFR/Test/encontrado.png', img_rgb)
+cv2.imwrite('./Test/encontrado.png', img_rgb)
 
 print('asdasd')

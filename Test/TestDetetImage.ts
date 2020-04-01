@@ -2,9 +2,9 @@ let assert = require('assert');
 let pythonBridge = require('python-bridge');
 let fs = require('fs') 
 
-let python = pythonBridge();
+let python = pythonBridge({python: 'python3'});
 
-const Script = fs.readFileSync('/home/mano/Documentos/Codigos/EMFR/Test/TesteDetect.py', "utf8")
+const Script = fs.readFileSync('./Test/TesteDetect.py', "utf8")
 
 python.ex`exec(${Script})`
 
