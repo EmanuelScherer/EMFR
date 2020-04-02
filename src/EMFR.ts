@@ -23,8 +23,11 @@ import * as robot from 'robotjs'
 import * as pythonBridge from 'python-bridge'
 import * as fs from 'fs'
 import { type } from 'os'
+import { resolve } from 'path'
 
+const lineReader = require('line-reader');
 const Jimp = require('jimp')
+const screenshot = require('screenshot-desktop')
 
 // LETS GERAIS
 //const python = pythonBridge({python: 'python3'})
@@ -56,6 +59,7 @@ export const MoveMouse = (x: number, y: number): void => {robot.moveMouse(x,y)}
 */
 export const MoveMouseSmooth = (x: number, y: number) : void => {robot.moveMouseSmooth(x, y)}
 
+/*
 /**
  * Tira um print da tela e gera um png
  * 
@@ -69,22 +73,46 @@ export const MoveMouseSmooth = (x: number, y: number) : void => {robot.moveMouse
  * <caption>Exemplo de uso</caption>
  * PrintTela(0, 0, 800, 800, "printlegal")
 */
-export const PrintTela = (x: number, y : number, w: number, h: number, path: string) : void => {
 
-    let im = robot.screen.capture(x, y, w, h)
+/**
+ * Tira um print da tela, gera uma imagem e retorna uma promessa com o path absoluto da imagem gerada
+ * 
+ * @param path - lugar e nome da foto com extrensão (Possiveis .jpg e .png) esse path NÃO cria pastas
+ * 
+ * @example
+ * <caption>Exemplo de uso</caption>
+ * PrintTela("printlegal.png")
+*/
+export const PrintTela = async (path: string) : Promise<string> => {
 
-    var jimg = new Jimp(w, h);
-    for (var x=0; x<w; x++) {
-        for (var y=0; y<h; y++) {
-            var index = (y * im.byteWidth) + (x * im.bytesPerPixel);
-            var r = im.image[index];
-            var g = im.image[index+1];
-            var b = im.image[index+2];
-            var num = (r*256) + (g*256*256) + (b*256*256*256) + 255;
-            jimg.setPixelColor(num, x, y);
-        }
-    }
-    jimg.write(path+".png")
+    return new Promise(async resolve => {
+
+        let r: string = "";
+
+        await screenshot({ filename: path }).then((imgPath : string) => {
+        
+            r = imgPath
+        
+        });
+
+        return r
+
+    })
+
+    // let im = robot.screen.capture(x, y, w, h)
+
+    // var jimg = new Jimp(w, h);
+    // for (var x=0; x<w; x++) {
+    //     for (var y=0; y<h; y++) {
+    //         var index = (y * im.byteWidth) + (x * im.bytesPerPixel);
+    //         var r = im.image[index];
+    //         var g = im.image[index+1];
+    //         var b = im.image[index+2];
+    //         var num = (r*256) + (g*256*256) + (b*256*256*256) + 255;
+    //         jimg.setPixelColor(num, x, y);
+    //     }
+    // }
+    // jimg.write(path+".png")
 
 }
 
@@ -294,8 +322,62 @@ export const GetScreenSize = () : ScreenSize => {
 
 }
 
-export const ReadAutomation = () : void => {
+let actions = {
 
-    
+    // MOUSE "Click\[(\d+,\d+)\]"
+    MoveMouse: {match: "Click\[(\d+,\d+)\]"},
+    MoveMouseSmooth: "a",
+    MouseClick: "a",
+    DragMouse: "a",
+    GetMousePos: "a",
+    MouseToggle: "a",
+    ScrollMouse: "a",
+    SetMouseDelay: "a",
+
+    // TELA
+    PrintTela: "a",
+    GetPixelColor: "a",
+    GetScreenSize: "a",
+
+    // TECLADO
+    KeyTap: "a",
+    KeyToggle: "a",
+    TypeString: "a",
+    TypeStringDelayed: "a",
+    SetKeyboardDelay: "a"
+
+};
+
+/**
+ * Lê um txt com a automação (o txt deve seguir todas as regras do EMFR para automação)
+ * 
+ * @returns True se tudo certo, False se algo deu errado
+ * 
+ * @param path - Caminho para o txt da automação
+*/
+export const ReadAutomation = async (path: string) : Promise<boolean> => {
+
+    return new Promise(async resolve => {
+
+        await lineReader.eachLine(path, (line : string, last: boolean) => {
+            
+            if (last) {
+
+                resolve(true)
+
+            }
+            else {
+
+                console.log(line);
+
+                let a = "MoveMouse"
+
+                actions[a]
+
+            }
+
+        })
+        
+    })
 
 }
