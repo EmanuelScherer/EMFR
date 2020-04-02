@@ -58,7 +58,7 @@
     "v8_trace_maps": 0,
     "v8_use_snapshot": "false",
     "want_separate_host_toolset": 0,
-    "nodedir": "/usr/include/nodejs",
+    "nodedir": "/home/mano/.cache/node-gyp/8.10.0",
     "standalone_static_library": 1
   }
 }

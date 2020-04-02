@@ -36,3 +36,6 @@ for pt in zip(*loc[::-1]):
 cv2.imwrite('./Test/encontrado.png', img_rgb)
 
 print('asdasd')
+
+def a():
+    return "aaaa"
