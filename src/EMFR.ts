@@ -24,10 +24,14 @@ import * as pythonBridge from 'python-bridge'
 import * as fs from 'fs'
 import { type } from 'os'
 import { resolve } from 'path'
+import { exec } from 'child_process'
+import * as emfc from 'emfc'
+import { Interface } from 'readline'
 
 const lineReader = require('line-reader');
 const Jimp = require('jimp')
 const screenshot = require('screenshot-desktop')
+const keypress = require('keypress');
 
 // LETS GERAIS
 //const python = pythonBridge({python: 'python3'})
@@ -45,7 +49,25 @@ const screenshot = require('screenshot-desktop')
  * MoveMouse(10, 10)
  * 
 */
-export const MoveMouse = (x: number, y: number): void => {robot.moveMouse(x,y)}
+export const MoveMouse = (x: number, y: number): void => {
+    
+    try {
+
+        robot.moveMouse(x,y)
+
+        emfc.Print("EMRC", [{tag: "Info", print: "Ação executada"},
+                            {tag: "Ação", print: "Mouse movimentado para ("+x+","+y+")"}])
+
+    }
+    catch (e) {
+
+        emfc.PrintError("EMRC", [{tag: "Info", print: "Erro ao movimentar mouse"},
+                                 {tag: "Onde", print: "MoveMouse("+x+","+y+")"},
+                                 {tag: "Erro", print: e}])
+
+    }
+
+}
 
 /**
  * Move o mouse para a posisão (x, y) suavemente - tenta imitar um humano
@@ -57,7 +79,25 @@ export const MoveMouse = (x: number, y: number): void => {robot.moveMouse(x,y)}
  * <caption>Exemplo de uso</caption>
  * MoveMouseSmooth(10, 10)
 */
-export const MoveMouseSmooth = (x: number, y: number) : void => {robot.moveMouseSmooth(x, y)}
+export const MoveMouseSmooth = (x: number, y: number) : void => {
+    
+    try {
+
+        robot.moveMouseSmooth(x, y)
+
+        emfc.Print("EMRC", [{tag: "Info", print: "Ação executada"},
+                            {tag: "Ação", print: "Mouse movimentado suavemente para ("+x+","+y+")"}])
+
+    }
+    catch (e) {
+
+        emfc.PrintError("EMRC", [{tag: "Info", print: "Erro ao movimentar mouse"},
+                                 {tag: "Onde", print: "MoveMouse("+x+","+y+")"},
+                                 {tag: "Erro", print: e}])
+
+    }
+
+}
 
 /*
 /**
@@ -92,6 +132,10 @@ export const PrintTela = async (path: string) : Promise<string> => {
         await screenshot({ filename: path }).then((imgPath : string) => {
         
             r = imgPath
+
+            emfc.Print("EMRC", [{tag: "Info", print: "Ação executada"},
+                                {tag: "Ação", print: "Print de tela tirada"}])
+
         
         });
 
@@ -130,6 +174,9 @@ export const ScrollMouse = (x: number, y: number) : void => {
 
     robot.scrollMouse(x, y)
 
+    emfc.Print("EMRC", [{tag: "Info", print: "Ação executada"},
+                        {tag: "Ação", print: "Mouse scroll ("+x+","+y+")"}])
+
 }
 
 /**
@@ -144,6 +191,10 @@ export const ScrollMouse = (x: number, y: number) : void => {
 export const SetMouseDelay = (ms: number) : void => {
 
     robot.setMouseDelay(ms)
+
+    emfc.Print("EMRC", [{tag: "Info", print: "Ação executada"},
+                        {tag: "Ação", print: "Mouse delay definido para "+ms+" ms"}])
+
 
 }
 
@@ -161,6 +212,9 @@ export const MouseClick = (bt: "left" | "right" | "middle", db: boolean) : void 
 
     robot.mouseClick(bt, db)
 
+    emfc.Print("EMRC", [{tag: "Info", print: "Ação executada"},
+                        {tag: "Ação", print: "Mouse click com botão: "+bt+" double: "+db}])
+
 }
 
 /**
@@ -177,6 +231,9 @@ export const MouseToggle = (tg: "down" | "up", bt: "left" | "right" | "middle") 
 
     robot.mouseToggle(tg, bt)
 
+    emfc.Print("EMRC", [{tag: "Info", print: "Ação executada"},
+                        {tag: "Ação", print: "Mouse toggle botão: "+bt}])
+
 }
 
 /**
@@ -192,6 +249,10 @@ export const MouseToggle = (tg: "down" | "up", bt: "left" | "right" | "middle") 
 export const DragMouse = (x: number, y: number) : void => {
 
     robot.dragMouse(x, y)
+
+    emfc.Print("EMRC", [{tag: "Info", print: "Ação executada"},
+                        {tag: "Ação", print: "Mouse movimentado (segunrando esquerdo) para ("+x+","+y+")"}])
+
 
 }
 
@@ -224,6 +285,9 @@ export const SetKeyboardDelay = (ms: number) : void => {
 
     robot.setKeyboardDelay(ms)
 
+    emfc.Print("EMRC", [{tag: "Info", print: "Ação executada"},
+                        {tag: "Ação", print: "Delay do teclado definido para "+ms+" ms"}])
+
 }
 
 /**
@@ -238,7 +302,10 @@ export const SetKeyboardDelay = (ms: number) : void => {
  */
 export const KeyTap = (key: string, mod: Array<"alt" | "command" | "control" | "shift" | "">) : void => {
 
-   robot.keyTap(key, mod)
+    robot.keyTap(key, mod)
+
+    emfc.Print("EMRC", [{tag: "Info", print: "Ação executada"},
+                        {tag: "Ação", print: "Tecla precionada: "+key+" + "+mod}])
 
 }
 
@@ -257,6 +324,9 @@ export const KeyToggle = (key : string, tg: "down" | "up", mod: Array<"alt" | "c
 
     robot.keyToggle(key, tg, mod)
 
+    emfc.Print("EMRC", [{tag: "Info", print: "Ação executada"},
+                        {tag: "Ação", print: "Toggle tecla: "+key+" + "+mod}])
+
 }
 
 /**
@@ -271,6 +341,9 @@ export const KeyToggle = (key : string, tg: "down" | "up", mod: Array<"alt" | "c
 export const TypeString = (type: string) : void => {
 
     robot.typeString(type)
+
+    emfc.Print("EMRC", [{tag: "Info", print: "Ação executada"},
+                        {tag: "Ação", print: "Escrito no teclado: "+type}])
 
 } 
 
@@ -287,6 +360,9 @@ export const TypeString = (type: string) : void => {
 export const TypeStringDelayed = (type: string, dl: number) : void => {
 
     robot.typeStringDelayed(type, dl)
+
+    emfc.Print("EMRC", [{tag: "Info", print: "Ação executada"},
+                        {tag: "Ação", print: "Escrito no teclado: "+type+" com delay de "+dl+" CPM (Caracteres por minuto)"}])
 
 }
 
@@ -322,62 +398,153 @@ export const GetScreenSize = () : ScreenSize => {
 
 }
 
-let actions = {
-
-    // MOUSE "Click\[(\d+,\d+)\]"
-    MoveMouse: {match: "Click\[(\d+,\d+)\]"},
-    MoveMouseSmooth: "a",
-    MouseClick: "a",
-    DragMouse: "a",
-    GetMousePos: "a",
-    MouseToggle: "a",
-    ScrollMouse: "a",
-    SetMouseDelay: "a",
-
-    // TELA
-    PrintTela: "a",
-    GetPixelColor: "a",
-    GetScreenSize: "a",
-
-    // TECLADO
-    KeyTap: "a",
-    KeyToggle: "a",
-    TypeString: "a",
-    TypeStringDelayed: "a",
-    SetKeyboardDelay: "a"
-
-};
-
 /**
- * Lê um txt com a automação (o txt deve seguir todas as regras do EMFR para automação)
+ * Lê uma automação atravez de um js (o js deve seguir todas as regras do EMFR para automação)
  * 
  * @returns True se tudo certo, False se algo deu errado
  * 
- * @param path - Caminho para o txt da automação
+ * @param path - Caminho para o js da automação
 */
 export const ReadAutomation = async (path: string) : Promise<boolean> => {
 
     return new Promise(async resolve => {
 
-        await lineReader.eachLine(path, (line : string, last: boolean) => {
-            
-            if (last) {
+        emfc.Print("EMRC", [{tag: "Info", print: "Ação inciada"},
+                            {tag: "Ação", print: "Lendo a automação: "+path}])
 
-                resolve(true)
+        try {
+
+            require(path)
+
+            resolve(true)
+            return true
+
+        }
+        catch (e) {
+
+            emfc.PrintError("EMRC", [{tag: "Info", print: "Erro na leitura de automação"},
+                                     {tag: "Erro", print: e}])
+
+            resolve(false)
+            return false
+
+        }
+        
+    })
+
+}
+
+export const WriteAutomation = () => {
+
+    return new Promise(resolve => {
+
+        IniGUI(1, "const emfr = require('emfr')\n").then(Auto => {
+
+            console.log(JSON.stringify(Auto))
+
+            fs.writeFileSync(Auto.Path+".js", Auto.Auto)
+
+            resolve(true)
+
+        })
+
+    })
+
+}
+
+interface Automation {
+
+    Path: string
+    Auto: string
+
+}
+
+
+const IniGUI = (p: number, auto: string) => {
+
+    return new Promise<Automation>(resolve => {
+
+        emfc.InputList("Selecione o que deve ser feito no passo #"+p, ["MoveMouse", 
+                                                                    "MoveMouseSmooth", 
+                                                                    "Click", 
+                                                                    "Move+Click", 
+                                                                    "MoveSmooth+Click",
+                                                                    "MouseToggle", 
+                                                                    "Scroll", 
+                                                                    "DelayMouse", 
+                                                                    "Print", 
+                                                                    "KeyTap", 
+                                                                    "KeyToggle", 
+                                                                    "DelayTeclado", 
+                                                                    "TypeString", 
+                                                                    "TypeStringDelayed",
+                                                                    "Salvar e Sair",
+                                                                    "Sair"])
+        .then(async escolha => {
+
+            if (escolha == "MoveMouse") {
+
+                WaitCtrlC().then(r => {
+
+                    let m = GetMousePos()
+
+                    auto += "emfr.MoveMouse("+m.x+","+m.y+")\n"
+
+                    resolve (IniGUI(p+1, auto))
+                    //return IniGUI(p+1, auto)
+
+                })
 
             }
-            else {
+            else if ("Salvar e Sair") {
 
-                console.log(line);
+                let path = ""
 
-                let a = "MoveMouse"
+                await emfc.Input("Digite o path para salvar a automação")
+                .then(inp => {path = inp})
 
-                actions[a]
+                resolve({Path: path, Auto: auto})
+                //return {Path: path, Auto: ""}
+
+            }
+            else if (escolha == "Sair") {
+
+                resolve({Path: "", Auto: ""})
+                //return {Path: "", Auto: ""}
 
             }
 
         })
+
+    })
+
+    //return {Path: "", Auto: ""}
+
+}
+
+const WaitCtrlC = () => {
+
+    return new Promise(resolve => {
+
+        keypress(process.stdin)
+
+        process.stdin.on('keypress', function (ch, key) {
         
+            //console.log('got "keypress"', key);
+        
+            if (key && key.ctrl && key.name == 'c') {
+                        
+                process.stdin.pause();
+
+                resolve(true)
+                
+            }
+
+        })
+
+        process.stdin.setRawMode(true);
+        process.stdin.resume();
+
     })
 
 }
