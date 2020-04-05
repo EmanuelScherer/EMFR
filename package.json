@@ -1,6 +1,6 @@
 {
   "name": "emfr",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Emanuel Master Functions RPA",
   "main": "EMFR.js",
   "scripts": {
