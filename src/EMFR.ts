@@ -218,6 +218,26 @@ export const MouseClick = (bt: "left" | "right" | "middle", db: boolean) : void 
 }
 
 /**
+ * Clicka com o mouse em uma posição da tela
+ * 
+ * @param x - X da tela
+ * @param y - Y da tela
+ * @param bt - Botão que será usado no click
+ * @param db - Define se vai ser double click
+ * 
+ * @example
+ * <caption>Exemplo de uso</caption>
+ * MouseClickAt(10, 10, "left", false)
+*/
+export const MouseClickAt = (x: number, y: number, bt: "left" | "right" | "middle", db: boolean) : void => {
+
+    MoveMouse(x, y)
+
+    MouseClick(bt, db)
+
+}
+
+/**
  * Muda o estado do mouse
  * 
  * @param tg - Estado do mouse (mantem esse estado até proximo MouseToggle, se for down)
@@ -434,11 +454,11 @@ export const ReadAutomation = async (path: string) : Promise<boolean> => {
 
 }
 
-export const WriteAutomation = () => {
+export const WriteAutomation = (lib) => {
 
     return new Promise(resolve => {
 
-        IniGUI(1, "const emfr = require('emfr')\n").then(Auto => {
+        IniGUI(1, "const emfr = require('"+lib+"')\n").then(Auto => {
 
             console.log(JSON.stringify(Auto))
 
@@ -464,39 +484,95 @@ const IniGUI = (p: number, auto: string) => {
 
     return new Promise<Automation>(resolve => {
 
-        emfc.InputList("Selecione o que deve ser feito no passo #"+p, ["MoveMouse", 
-                                                                    "MoveMouseSmooth", 
-                                                                    "Click", 
-                                                                    "Move+Click", 
-                                                                    "MoveSmooth+Click",
-                                                                    "MouseToggle", 
-                                                                    "Scroll", 
-                                                                    "DelayMouse", 
-                                                                    "Print", 
-                                                                    "KeyTap", 
-                                                                    "KeyToggle", 
-                                                                    "DelayTeclado", 
-                                                                    "TypeString", 
-                                                                    "TypeStringDelayed",
-                                                                    "Salvar e Sair",
-                                                                    "Sair"])
+        let Escolhas = ["MoveMouse", 
+                        "MoveMouseSmooth", 
+                        "Click", 
+                        "Move+Click", 
+                        "MoveSmooth+Click",
+                        "MouseToggle", 
+                        "Scroll", 
+                        "DelayMouse", 
+                        "Print", 
+                        "KeyTap", 
+                        "KeyToggle", 
+                        "DelayTeclado", 
+                        "TypeString", 
+                        "TypeStringDelayed",
+                        "Salvar e Sair",
+                        "Sair"]
+
+
+        emfc.InputList("Selecione o que deve ser feito no passo #"+p, Escolhas)
         .then(async escolha => {
 
             if (escolha == "MoveMouse") {
 
-                WaitCtrlC().then(r => {
+                WaitCtrlC("Mova o mouse e click Ctrl+C para confirmar a posição").then(r => {
 
                     let m = GetMousePos()
 
                     auto += "emfr.MoveMouse("+m.x+","+m.y+")\n"
 
                     resolve (IniGUI(p+1, auto))
-                    //return IniGUI(p+1, auto)
 
                 })
 
             }
-            else if ("Salvar e Sair") {
+            else if (escolha == "MoveMouseSmooth") {
+
+                WaitCtrlC("Mova o mouse e click Ctrl+C para confirmar a posição").then(r => {
+
+                    let m = GetMousePos()
+
+                    auto += "emfr.MoveMouseSmooth("+m.x+","+m.y+")\n"
+
+                    resolve (IniGUI(p+1, auto))
+
+                })
+
+            }
+            else if (escolha == "Click") {
+
+                emfc.InputList("Escolha o botão a ser clicado", ["direito", "meio", "esquerdo"])
+                .then(bt => {
+
+                    emfc.InputConfirm("Duplo click?")
+                    .then(db => {
+
+                        if (bt == "direito") {
+
+                            auto += "emfr.MouseClick('right',"+db+")"
+
+                            resolve (IniGUI(p+1, auto))    
+
+                        }
+                        else if (bt == "meio") {
+
+                            auto += "emfr.MouseClick('middle',"+db+")"
+
+                            resolve (IniGUI(p+1, auto))    
+
+                        }
+                        else if (bt == "esquerdo") {
+
+                            auto += "emfr.MouseClick('left',"+db+")"
+
+                            resolve (IniGUI(p+1, auto))    
+
+                        }
+
+                    })
+
+                })
+
+            }
+            else if (escolha == "Move+Click") {
+
+                WaitCtrlC("Mova o mouse e click Ctrl+C para confirmar a posição")
+                .then()
+
+            }
+            else if (escolha == "Salvar e Sair") {
 
                 let path = ""
 
@@ -522,9 +598,11 @@ const IniGUI = (p: number, auto: string) => {
 
 }
 
-const WaitCtrlC = () => {
+const WaitCtrlC = (msg: string) => {
 
     return new Promise(resolve => {
+
+        console.log(msg)
 
         keypress(process.stdin)
 
