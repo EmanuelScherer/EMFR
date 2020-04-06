@@ -458,6 +458,8 @@ export const WriteAutomation = (lib) => {
 
     return new Promise(resolve => {
 
+        console.log("O WriteAutomation está atualmente descontinuado (pois achei desnecessario isso aki)")
+
         IniGUI(1, "const emfr = require('"+lib+"')\n").then(Auto => {
 
             console.log(JSON.stringify(Auto))
@@ -507,7 +509,7 @@ const IniGUI = (p: number, auto: string) => {
 
             if (escolha == "MoveMouse") {
 
-                WaitCtrlC("Mova o mouse e click Ctrl+C para confirmar a posição").then(r => {
+                WaitCtrlC("Mova o mouse e aperte Ctrl+C para confirmar a posição").then(r => {
 
                     let m = GetMousePos()
 
@@ -520,7 +522,7 @@ const IniGUI = (p: number, auto: string) => {
             }
             else if (escolha == "MoveMouseSmooth") {
 
-                WaitCtrlC("Mova o mouse e click Ctrl+C para confirmar a posição").then(r => {
+                WaitCtrlC("Mova o mouse e aperte Ctrl+C para confirmar a posição").then(r => {
 
                     let m = GetMousePos()
 
@@ -568,8 +570,12 @@ const IniGUI = (p: number, auto: string) => {
             }
             else if (escolha == "Move+Click") {
 
-                WaitCtrlC("Mova o mouse e click Ctrl+C para confirmar a posição")
-                .then()
+                WaitCtrlC("Mova o mouse e aperte Ctrl+C para confirmar a posição")
+                .then(r => {
+
+
+
+                })
 
             }
             else if (escolha == "Salvar e Sair") {
